@@ -15,8 +15,8 @@
                 align-items: center;
                 justify-content: center;
 
-                transform-origin: left;
-                transform: scale(2);
+                transform-origin: left top;
+                transform: scale(1);
             }
 
 
@@ -35,6 +35,8 @@
         </style>
     </head>
     <body>
+        <button id="scaleup">scale up</button>
+
         <div class="container">
             <div class="page-wrapper">
                 <div class="page">
@@ -42,5 +44,30 @@
                 </div>
             </div>
         </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script>
+            const $scaleUp = $('#scaleup');
+            const $container = $('.container');
+            const $pageWrapper = $('.page-wrapper');
+            let scale = 1;
+
+
+            $scaleUp.click(() => {
+                $pageWrapper.css('transform', `scale(${scale += 0.5})`);
+
+                const bbox = $pageWrapper[0].getBoundingClientRect();
+                const availableX = bbox.width - $container.width();
+                const scaleRatio = scale / (scale-0.5);
+
+                const w1 = $container.scrollLeft() + 0.5 * $container.width();
+                const h1 = $container.scrollTop() + 0.5 * $container.height();
+                const w2 = w1 * scaleRatio - 0.5 * $container.width();
+                const h2 = h1 * scaleRatio - 0.5 * $container.height();
+
+                $container.scrollLeft(w2);
+                $container.scrollTop(h2);
+            });
+        </script>
     </body>
 </html>
