@@ -6,11 +6,11 @@
         height: 768px;
         background-color: lightgray;
         overflow: scroll;
-        display: flex;
-        justify-content: center;
       }
 
       .page-list {
+        display: table;
+        margin: 0 auto;
       }
 
       .page {
@@ -56,10 +56,9 @@
       let height = 400;
       let scaleLevel = 1;
 
-
       $scaleUp.click(() => {
         scaleLevel += 0.5;
-        
+
         $page.css({
           width: width * scaleLevel,
           height: height * scaleLevel,
