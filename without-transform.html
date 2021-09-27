@@ -36,23 +36,62 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    
     <script>
         const $scaleUp = $("#scaleUp");
         const $container = $('.container');
         const $page = $('.page');
 
-        (function () {
-            $(window).on('resize', () => {
-                $page.css({
-                    width: '120px',
-                    height: '100px',
-                    left: getCenterLeftPosition($container.width(), $page.width()) + 'px'
-                });
-            })
-
-            function getCenterLeftPosition(containerWidth,pageWidth) {
+        const geomUtils = (function () {
+            const getCenterLeftPosition = function (containerWidth,pageWidth) {
                 return containerWidth / 2 - pageWidth / 2
             }
+
+            return {
+                getCenterLeftPosition
+            };
+        })();
+
+        const domUtils = (function () {
+            const setCenter = ($el, $container) => {
+                $el.css({
+                    left: $el.width() > $container.width() ? 0 : geomUtils.getCenterLeftPosition($container.width(), $el.width()) + 'px'
+                });
+            }
+
+            return {
+                setCenter
+            };
+        })();
+
+        (function () {
+            let width = 120;
+            let height = 100;
+            
+            $(window).on('resize', () => {
+                $page.css({
+                    width: width + 'px',
+                    height: height + 'px',
+                });
+
+                domUtils.setCenter($page, $container);
+            })
+
+            $scaleUp.click(() => {
+                width *= 1.2;
+                height *= 1.2;
+
+                $page.css({
+                    width: width + 'px',
+                    height: height + 'px'
+                });
+
+                domUtils.setCenter($page, $container);
+            });
+
+            $(window).trigger('resize');
+            
         })();
     </script>
   </body>
