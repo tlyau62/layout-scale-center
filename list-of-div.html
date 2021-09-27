@@ -1,0 +1,143 @@
+<html>
+  <head>
+    <style>
+      .container {
+        width: 800px;
+        height: 600px;
+        background-color: lightgray;
+        overflow: scroll;
+        position: relative;
+      }
+
+      .page {
+        height: 100px;
+        width: 120px;
+        background-color: lightblue;
+        position: absolute;
+      }
+
+      .img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        background-color: lightgreen;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="scaleUp">scale up</button>
+    <button id="scaleDown">scale down</button>
+
+    <div class="container">
+      <div class="page">
+        <img src="./test.png" class="img" />
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+    <script>
+      const $scaleUp = $("#scaleUp");
+      const $scaleDown = $("#scaleDown");
+      const $container = $(".container");
+      const $page = $(".page");
+
+      const geomUtils = (function () {
+        const getCenterLeftPosition = function (containerWidth, pageWidth) {
+          return containerWidth / 2 - pageWidth / 2;
+        };
+
+        const getScaleRatio = (oldScaleLevel, newScaleLevel) => {
+          return (newScaleLevel - oldScaleLevel) / oldScaleLevel;
+        };
+
+        return {
+          getCenterLeftPosition,
+          getScaleRatio,
+        };
+      })();
+
+      const domUtils = (function () {
+        const setCenter = ($el, $container) => {
+          $el.css({
+            left:
+              $el.width() > $container.width()
+                ? 0
+                : geomUtils.getCenterLeftPosition(
+                    $container.width(),
+                    $el.width()
+                  ) + "px",
+            top:
+              $el.height() > $container.height()
+                ? 0
+                : geomUtils.getCenterLeftPosition(
+                    $container.height(),
+                    $el.height()
+                  ) + "px",
+          });
+        };
+
+        const resize = ($el, width, height) => {
+          $page.css({
+            width: width + "px",
+            height: height + "px",
+          });
+        };
+
+        const scrollCenter = ($container, scaleRatio) => {
+          const w1 = $container.scrollLeft() + 0.5 * $container.width();
+          const h1 = $container.scrollTop() + 0.5 * $container.height();
+          const w2 = w1 * scaleRatio - 0.5 * $container.width();
+          const h2 = h1 * scaleRatio - 0.5 * $container.height();
+
+          $container.scrollLeft(w2);
+          $container.scrollTop(h2);
+        };
+
+        const zoom = ($el, $container, scaleRatio) => {
+          const width = $el.width() * scaleRatio;
+          const height = $el.height() * scaleRatio;
+
+          domUtils.resize($el, width, height);
+          domUtils.scrollCenter($container, scaleRatio);
+        };
+
+        return {
+          setCenter,
+          resize,
+          scrollCenter,
+          zoom,
+        };
+      })();
+
+      (function () {
+        let width = 120;
+        let height = 100;
+
+        $(window).on("resize", () => {
+          domUtils.resize($page, width, height);
+          domUtils.setCenter($page, $container);
+        });
+
+        $scaleUp.click(() => {
+          width *= 1.2;
+          height *= 1.2;
+
+          domUtils.zoom($page, $container, 1.2);
+          domUtils.setCenter($page, $container);
+        });
+
+        $scaleDown.click(() => {
+          width *= 1 / 1.2;
+          height *= 1 / 1.2;
+
+          domUtils.zoom($page, $container, 1 / 1.2);
+          domUtils.setCenter($page, $container);
+        });
+
+        $(window).trigger("resize");
+      })();
+    </script>
+  </body>
+</html>
