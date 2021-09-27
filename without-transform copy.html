@@ -52,6 +52,19 @@
       const $scaleDown = $("#scaleDown");
       const $container = $(".container");
       const $page = $(".page");
+      let width = 600;
+      let height = 400;
+      let scaleLevel = 1;
+
+
+      $scaleUp.click(() => {
+        scaleLevel += 0.5;
+        
+        $page.css({
+          width: width * scaleLevel,
+          height: height * scaleLevel,
+        });
+      });
     </script>
   </body>
 </html>
