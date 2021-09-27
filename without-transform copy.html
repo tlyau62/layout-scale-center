@@ -63,6 +63,12 @@
           width: width * scaleLevel,
           height: height * scaleLevel,
         });
+
+        const scrollable = Math.max(0, $page.width() - $container.width());
+
+        console.log(scrollable);
+
+        $container.scrollLeft(scrollable / 2);
       });
     </script>
   </body>
