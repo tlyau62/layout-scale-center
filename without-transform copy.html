@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <style>
+      .container {
+        width: 1024px;
+        height: 768px;
+        background-color: lightgray;
+        overflow: scroll;
+        display: flex;
+        justify-content: center;
+      }
+
+      .page-list {
+      }
+
+      .page {
+        height: 400px;
+        width: 600px;
+      }
+
+      .img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        background-color: lightblue;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="scaleUp">scale up</button>
+    <button id="scaleDown">scale down</button>
+
+    <div class="container">
+      <div class="page-list">
+        <div class="page">
+          <img src="./test.png" class="img" />
+        </div>
+        <div class="page">
+          <img src="./test.png" class="img" />
+        </div>
+        <div class="page">
+          <img src="./test.png" class="img" />
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+    <script>
+      const $scaleUp = $("#scaleUp");
+      const $scaleDown = $("#scaleDown");
+      const $container = $(".container");
+      const $page = $(".page");
+    </script>
+  </body>
+</html>
