@@ -60,8 +60,16 @@
                 });
             }
 
+            const resize = ($el, width, height) => {
+                $page.css({
+                    width: width + 'px',
+                    height: height + 'px'
+                });
+            };
+
             return {
-                setCenter
+                setCenter,
+                resize
             };
         })();
 
@@ -70,11 +78,7 @@
             let height = 100;
             
             $(window).on('resize', () => {
-                $page.css({
-                    width: width + 'px',
-                    height: height + 'px',
-                });
-
+                domUtils.resize($page, width, height);
                 domUtils.setCenter($page, $container);
             })
 
@@ -82,11 +86,7 @@
                 width *= 1.2;
                 height *= 1.2;
 
-                $page.css({
-                    width: width + 'px',
-                    height: height + 'px'
-                });
-
+                domUtils.resize($page, width, height);
                 domUtils.setCenter($page, $container);
             });
 
