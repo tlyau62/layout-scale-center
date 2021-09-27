@@ -118,6 +118,14 @@
                 domUtils.setCenter($page, $container);
             });
 
+            $scaleDown.click(() => {
+                width *= 1 / 1.2;
+                height *= 1 / 1.2;
+
+                domUtils.zoom($page, $container, 1 / 1.2);
+                domUtils.setCenter($page, $container);
+            });
+
             $(window).trigger('resize');
             
         })();
