@@ -59,16 +59,21 @@
       $scaleUp.click(() => {
         scaleLevel += 0.5;
 
+        const centerScroll =
+          Math.max(0, $page.width() - $container.width()) / 2;
+        const offSetScroll = centerScroll - $container.scrollLeft();
+
         $page.css({
           width: width * scaleLevel,
           height: height * scaleLevel,
         });
 
-        const scrollable = Math.max(0, $page.width() - $container.width());
+        const newCenterScroll =
+          Math.max(0, $page.width() - $container.width()) / 2;
 
-        console.log(scrollable);
+        const diff = width * scaleLevel - width * (scaleLevel - 0.5);
 
-        $container.scrollLeft(scrollable / 2);
+        $container.scrollLeft(newCenterScroll - offSetScroll);
       });
     </script>
   </body>
