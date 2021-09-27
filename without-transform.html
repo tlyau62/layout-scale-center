@@ -63,7 +63,8 @@
         const domUtils = (function () {
             const setCenter = ($el, $container) => {
                 $el.css({
-                    left: $el.width() > $container.width() ? 0 : geomUtils.getCenterLeftPosition($container.width(), $el.width()) + 'px'
+                    left: $el.width() > $container.width() ? 0 : geomUtils.getCenterLeftPosition($container.width(), $el.width()) + 'px',
+                    top: $el.height() > $container.height() ? 0 : geomUtils.getCenterLeftPosition($container.height(), $el.height()) + 'px'
                 });
             }
 
