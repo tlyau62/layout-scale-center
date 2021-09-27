@@ -60,8 +60,8 @@
         scaleLevel += 0.5;
 
         const centerScroll =
-          Math.max(0, $page.width() - $container.width()) / 2;
-        const offSetScroll = centerScroll - $container.scrollLeft();
+          Math.max(0, $page.width() - $container.width());
+        const offset = $container.scrollLeft();
 
         $page.css({
           width: width * scaleLevel,
@@ -69,11 +69,13 @@
         });
 
         const newCenterScroll =
-          Math.max(0, $page.width() - $container.width()) / 2;
+          Math.max(0, $page.width() - $container.width());
 
-        const diff = width * scaleLevel - width * (scaleLevel - 0.5);
+        const r = newCenterScroll / centerScroll;
 
-        $container.scrollLeft(newCenterScroll - offSetScroll);
+        console.log(r);
+
+        $container.scrollLeft(newCenterScroll * 0.5- (0.5 * newCenterScroll - offset * r));
       });
     </script>
   </body>
