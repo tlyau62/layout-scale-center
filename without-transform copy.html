@@ -73,9 +73,15 @@
 
         const r = newCenterScroll / centerScroll;
 
-        console.log(r);
+        if (!centerScroll) {
+          $container.scrollLeft(newCenterScroll * 0.5);
+        } else {
+          console.log(r);
+  
+          $container.scrollLeft(newCenterScroll * 0.5- (0.5 * newCenterScroll - offset * r));
 
-        $container.scrollLeft(newCenterScroll * 0.5- (0.5 * newCenterScroll - offset * r));
+        }
+
       });
     </script>
   </body>
