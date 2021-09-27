@@ -26,6 +26,7 @@
   </head>
   <body>
     <button id="scaleUp">scale up</button>
+    <button id="scaleDown">scale down</button>
 
     <div class="container">
       <div class="page-wrapper">
@@ -40,6 +41,7 @@
     
     <script>
         const $scaleUp = $("#scaleUp");
+        const $scaleDown = $("#scaleDown");
         const $container = $('.container');
         const $page = $('.page');
 
@@ -48,8 +50,13 @@
                 return containerWidth / 2 - pageWidth / 2
             }
 
+            const getScaleRatio = (oldScaleLevel, newScaleLevel) => {
+                return (newScaleLevel - oldScaleLevel) / oldScaleLevel; 
+            }
+
             return {
-                getCenterLeftPosition
+                getCenterLeftPosition,
+                getScaleRatio
             };
         })();
 
@@ -67,9 +74,29 @@
                 });
             };
 
+            const scrollCenter = ($container, scaleRatio) => {
+                const w1 = $container.scrollLeft() + 0.5 * $container.width();
+                const h1 = $container.scrollTop() + 0.5 * $container.height();
+                const w2 = w1 * scaleRatio - 0.5 * $container.width();
+                const h2 = h1 * scaleRatio - 0.5 * $container.height();
+
+                $container.scrollLeft(w2);
+                $container.scrollTop(h2);
+            };
+
+            const zoom = ($el, $container, scaleRatio) => {
+                const width = $el.width() * scaleRatio;
+                const height = $el.height() * scaleRatio;
+                
+                domUtils.resize($el, width, height);
+                domUtils.scrollCenter($container, scaleRatio);
+            }
+
             return {
                 setCenter,
-                resize
+                resize,
+                scrollCenter,
+                zoom
             };
         })();
 
@@ -86,7 +113,7 @@
                 width *= 1.2;
                 height *= 1.2;
 
-                domUtils.resize($page, width, height);
+                domUtils.zoom($page, $container, 1.2);
                 domUtils.setCenter($page, $container);
             });
 
