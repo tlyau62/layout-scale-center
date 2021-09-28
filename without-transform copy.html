@@ -125,18 +125,28 @@
           oldScaleLevel,
           newScaleLevel
         ) => {
+          updateOffset($container, () => {
+            scale($page, baseWidth, baseHeight, newScaleLevel);
+            translateCenterX(
+              $container,
+              geomUtils.scaleRatio(newScaleLevel, oldScaleLevel),
+              scrollX
+            );
+            translateCenterY(
+              $container,
+              geomUtils.scaleRatio(newScaleLevel, oldScaleLevel),
+              scrollY
+            );
+          });
+        };
+
+        /**
+         * Safely to invoke any function that will create offset on the container
+         */
+        const updateOffset = ($container, fn) => {
           $container.off("scroll");
-          scale($page, baseWidth, baseHeight, newScaleLevel);
-          translateCenterX(
-            $container,
-            geomUtils.scaleRatio(newScaleLevel, oldScaleLevel),
-            scrollX
-          );
-          translateCenterY(
-            $container,
-            geomUtils.scaleRatio(newScaleLevel, oldScaleLevel),
-            scrollY
-          );
+
+          fn && fn();
 
           $container.on("scroll", () => {
             scrollX = getOffetFromCenterX($container);
@@ -155,6 +165,7 @@
           getOffetFromCenterX,
           getOffetFromCenterY,
           zoom,
+          updateOffset,
         };
       })();
 
@@ -172,14 +183,11 @@
         );
       };
 
-      $container.on("scroll", () => {
-        scrollX = domUtils.getOffetFromCenterX($container);
-        scrollY = domUtils.getOffetFromCenterY($container);
-      });
+      domUtils.updateOffset($container);
 
-      $container.trigger("scroll");
-
+      scrollX = 0;
       scrollY = -domUtils.getScrollHeight($container) / 2;
+
       $scaleUp.click(scale(1));
       $scaleDown.click(scale(-1));
     </script>
