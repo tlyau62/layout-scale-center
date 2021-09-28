@@ -74,7 +74,7 @@
         };
 
         const getScrollWidth = ($container) =>
-          $container[0].scrollWidth - $container[0].clientWidth;
+          $container[0].scrollWidth - $container.width();
 
         const scrollCenterX = ($container) => {
           const scrollWidth = getScrollWidth($container);
@@ -85,25 +85,45 @@
         const scrollCenterOffsetX = ($container) =>
           $container.scrollLeft() - getScrollWidth($container) / 2;
 
+        const translateCenterX = (
+          $container,
+          scaleRatio,
+          offset,
+          oldScrollWidth
+        ) => {
+          const w =
+            (oldScrollWidth / 2 + offset) * scaleRatio +
+            0.5 * $container.width() * (scaleRatio - 1);
+
+          $container.scrollLeft(w);
+        };
+
         return {
           scale,
           getScrollWidth,
           scrollCenterX,
           scrollCenterOffsetX,
+          translateCenterX,
         };
       })();
 
       $container.on("scroll", () => {
         scrollX = domUtils.scrollCenterOffsetX($container);
-
-        console.log(scrollX);
       });
 
       $scaleUp.click(() => {
         scaleLevel += 0.1;
 
+        const scrollLeft = domUtils.getScrollWidth($container);
+
         domUtils.scale($page, width, height, scaleLevel);
         domUtils.scrollCenterX($container);
+        domUtils.translateCenterX(
+          $container,
+          scaleLevel / (scaleLevel - 0.1),
+          scrollX,
+          scrollLeft
+        );
       });
     </script>
   </body>
