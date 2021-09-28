@@ -56,6 +56,7 @@
       let width = 600;
       let height = 400;
       let scrollX = 0;
+      const ratioInc = 0.5;
 
       const geomUtils = (function () {
         const scale = (length, scaleLevel) => length * scaleLevel;
@@ -102,15 +103,15 @@
         };
       })();
 
-      $scaleUp.click(() => {
-        scaleLevel += 0.5;
+      const scale = (inc) => () => {
+        scaleLevel += ratioInc * inc;
 
         $container.off("scroll");
         domUtils.scale($page, width, height, scaleLevel);
         domUtils.scrollCenterX($container);
         domUtils.translateCenterX(
           $container,
-          scaleLevel / (scaleLevel - 0.5),
+          scaleLevel / (scaleLevel - ratioInc * inc),
           scrollX
         );
 
@@ -118,7 +119,10 @@
           scrollX =
             $container.scrollLeft() - domUtils.getScrollWidth($container) / 2;
         });
-      });
+      };
+
+      $scaleUp.click(scale(1));
+      $scaleDown.click(scale(-1));
     </script>
   </body>
 </html>
