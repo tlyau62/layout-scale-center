@@ -81,6 +81,10 @@
         const getScrollHeight = ($container) =>
           $container[0].scrollHeight - $container.outerHeight();
 
+        /**
+         * Oppose to getOffetFromCenterX.
+         * Calculate new scroll position according to current offset and new scaleRatio
+         */
         const translateCenterX = ($container, scaleRatio, offset) => {
           const newScrollX = offset * scaleRatio;
 
@@ -97,12 +101,24 @@
           );
         };
 
+        /**
+         * Oppose to translateCenterX.
+         * Calculate offset based to the center of the container
+         */
+        const getOffetFromCenterX = ($container) =>
+          $container.scrollLeft() - getScrollWidth($container) / 2;
+
+        const getOffetFromCenterY = ($container) =>
+          $container.scrollTop() - getScrollHeight($container) / 2;
+
         return {
           scale,
           getScrollWidth,
           getScrollHeight,
           translateCenterX,
           translateCenterY,
+          getOffetFromCenterX,
+          getOffetFromCenterY,
         };
       })();
 
@@ -123,24 +139,16 @@
         );
 
         $container.on("scroll", () => {
-          scrollX =
-            $container.scrollLeft() - domUtils.getScrollWidth($container) / 2;
-
-          scrollY =
-            $container.scrollTop() - domUtils.getScrollHeight($container) / 2;
-
-          console.log(scrollY);
+          scrollX = domUtils.getOffetFromCenterX($container);
+          scrollY = domUtils.getOffetFromCenterY($container);
         });
 
         $container.trigger("scroll");
       };
 
       $container.on("scroll", () => {
-        scrollX =
-          $container.scrollLeft() - domUtils.getScrollWidth($container) / 2;
-
-        scrollY =
-          $container.scrollTop() - domUtils.getScrollHeight($container) / 2;
+        scrollX = domUtils.getOffetFromCenterX($container);
+        scrollY = domUtils.getOffetFromCenterY($container);
       });
 
       $container.trigger("scroll");
