@@ -74,7 +74,7 @@
         };
 
         const getScrollWidth = ($container) =>
-          $container[0].scrollWidth - $container.width();
+          $container[0].scrollWidth - $container.outerWidth();
 
         const scrollCenterX = ($container) => {
           const scrollWidth = getScrollWidth($container);
@@ -85,17 +85,12 @@
         const scrollCenterOffsetX = ($container) =>
           $container.scrollLeft() - getScrollWidth($container) / 2;
 
-        const translateCenterX = (
-          $container,
-          scaleRatio,
-          offset,
-          oldScrollWidth
-        ) => {
-          const w =
-            (oldScrollWidth / 2 + offset) * scaleRatio +
-            0.5 * $container.width() * (scaleRatio - 1);
+        const translateCenterX = ($container, scaleRatio, offset) => {
+          const newScrollX = offset * scaleRatio;
 
-          $container.scrollLeft(w);
+          $container.scrollLeft(
+            newScrollX + domUtils.getScrollWidth($container) / 2
+          );
         };
 
         return {
@@ -107,23 +102,22 @@
         };
       })();
 
-      $container.on("scroll", () => {
-        scrollX = domUtils.scrollCenterOffsetX($container);
-      });
-
       $scaleUp.click(() => {
-        scaleLevel += 0.1;
+        scaleLevel += 0.5;
 
-        const scrollLeft = domUtils.getScrollWidth($container);
-
+        $container.off("scroll");
         domUtils.scale($page, width, height, scaleLevel);
         domUtils.scrollCenterX($container);
         domUtils.translateCenterX(
           $container,
-          scaleLevel / (scaleLevel - 0.1),
-          scrollX,
-          scrollLeft
+          scaleLevel / (scaleLevel - 0.5),
+          scrollX
         );
+
+        $container.on("scroll", () => {
+          scrollX =
+            $container.scrollLeft() - domUtils.getScrollWidth($container) / 2;
+        });
       });
     </script>
   </body>
