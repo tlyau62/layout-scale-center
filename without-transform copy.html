@@ -81,24 +81,6 @@
         const getScrollHeight = ($container) =>
           $container[0].scrollHeight - $container.outerHeight();
 
-        const scrollCenterX = ($container) => {
-          const scrollWidth = getScrollWidth($container);
-
-          $container.scrollLeft(scrollWidth / 2);
-        };
-
-        const scrollCenterY = ($container) => {
-          const scrollHeight = getScrollHeight($container);
-
-          $container.scrollTop(scrollHeight / 2);
-        };
-
-        const scrollCenterOffsetX = ($container) =>
-          $container.scrollLeft() - getScrollWidth($container) / 2;
-
-        const scrollCenterOffsetY = ($container) =>
-          $container.scrollTop() - getScrollHeight($container) / 2;
-
         const translateCenterX = ($container, scaleRatio, offset) => {
           const newScrollX = offset * scaleRatio;
 
@@ -119,10 +101,6 @@
           scale,
           getScrollWidth,
           getScrollHeight,
-          scrollCenterX,
-          scrollCenterY,
-          scrollCenterOffsetX,
-          scrollCenterOffsetY,
           translateCenterX,
           translateCenterY,
         };
@@ -150,9 +128,24 @@
 
           scrollY =
             $container.scrollTop() - domUtils.getScrollHeight($container) / 2;
+
+          console.log(scrollY);
         });
+
+        $container.trigger("scroll");
       };
 
+      $container.on("scroll", () => {
+        scrollX =
+          $container.scrollLeft() - domUtils.getScrollWidth($container) / 2;
+
+        scrollY =
+          $container.scrollTop() - domUtils.getScrollHeight($container) / 2;
+      });
+
+      $container.trigger("scroll");
+
+      scrollY = -domUtils.getScrollHeight($container) / 2;
       $scaleUp.click(scale(1));
       $scaleDown.click(scale(-1));
     </script>
