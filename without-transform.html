@@ -63,7 +63,7 @@
         const domUtils = (function () {
             const setCenter = ($el, $container) => {
                 $el.css({
-                    left: $el.width() > $container.width() ? 0 : geomUtils.getCenterLeftPosition($container.width(), $el.width()) + 'px',
+                    left: $el.outerWidth() > $container.outerWidth() ? 0 : geomUtils.getCenterLeftPosition($container.outerWidth(), $el.outerWidth()) + 'px',
                     top: $el.height() > $container.height() ? 0 : geomUtils.getCenterLeftPosition($container.height(), $el.height()) + 'px'
                 });
             }
@@ -76,21 +76,32 @@
             };
 
             const scrollCenter = ($container, scaleRatio) => {
-                const w1 = $container.scrollLeft() + 0.5 * $container.width();
-                const h1 = $container.scrollTop() + 0.5 * $container.height();
-                const w2 = w1 * scaleRatio - 0.5 * $container.width();
-                const h2 = h1 * scaleRatio - 0.5 * $container.height();
+                const w = $container.scrollLeft() * scaleRatio + 0.5 * $container.outerWidth() * ( scaleRatio - 1);
+                const h = $container.scrollTop() * scaleRatio + 0.5 * $container.height() * ( scaleRatio - 1);
 
-                $container.scrollLeft(w2);
-                $container.scrollTop(h2);
+                $container.scrollLeft(w);
+                $container.scrollTop(h);
             };
 
             const zoom = ($el, $container, scaleRatio) => {
                 const width = $el.width() * scaleRatio;
                 const height = $el.height() * scaleRatio;
+                const oldWidth = $el.width();
+                const oldHeight = $el.height();
                 
                 domUtils.resize($el, width, height);
-                domUtils.scrollCenter($container, scaleRatio);
+
+                if (oldWidth < $container.width() && width > $container.width()) {
+                    $container.scrollLeft(($el.width() - $container.width())/2);
+                } else {
+                    $container.scrollLeft($container.scrollLeft() * scaleRatio + 0.5 * $container.width() * ( scaleRatio - 1));
+                }
+
+                if (oldHeight < $container.height() && height > $container.height()) {
+                    $container.scrollTop(($el.height() - $container.height())/2);
+                } else {
+                    $container.scrollTop($container.scrollTop() * scaleRatio + 0.5 * $container.height() * ( scaleRatio - 1));
+                }
             }
 
             return {
