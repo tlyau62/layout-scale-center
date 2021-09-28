@@ -56,6 +56,7 @@
       let width = 600;
       let height = 400;
       let scrollX = 0;
+      let scrollY = 0;
       const ratioInc = 0.5;
 
       const geomUtils = (function () {
@@ -77,14 +78,26 @@
         const getScrollWidth = ($container) =>
           $container[0].scrollWidth - $container.outerWidth();
 
+        const getScrollHeight = ($container) =>
+          $container[0].scrollHeight - $container.outerHeight();
+
         const scrollCenterX = ($container) => {
           const scrollWidth = getScrollWidth($container);
 
           $container.scrollLeft(scrollWidth / 2);
         };
 
+        const scrollCenterY = ($container) => {
+          const scrollHeight = getScrollHeight($container);
+
+          $container.scrollTop(scrollHeight / 2);
+        };
+
         const scrollCenterOffsetX = ($container) =>
           $container.scrollLeft() - getScrollWidth($container) / 2;
+
+        const scrollCenterOffsetY = ($container) =>
+          $container.scrollTop() - getScrollHeight($container) / 2;
 
         const translateCenterX = ($container, scaleRatio, offset) => {
           const newScrollX = offset * scaleRatio;
@@ -94,12 +107,24 @@
           );
         };
 
+        const translateCenterY = ($container, scaleRatio, offset) => {
+          const newScrollY = offset * scaleRatio;
+
+          $container.scrollTop(
+            newScrollY + domUtils.getScrollHeight($container) / 2
+          );
+        };
+
         return {
           scale,
           getScrollWidth,
+          getScrollHeight,
           scrollCenterX,
+          scrollCenterY,
           scrollCenterOffsetX,
+          scrollCenterOffsetY,
           translateCenterX,
+          translateCenterY,
         };
       })();
 
@@ -108,16 +133,23 @@
 
         $container.off("scroll");
         domUtils.scale($page, width, height, scaleLevel);
-        domUtils.scrollCenterX($container);
         domUtils.translateCenterX(
           $container,
           scaleLevel / (scaleLevel - ratioInc * inc),
           scrollX
         );
+        domUtils.translateCenterY(
+          $container,
+          scaleLevel / (scaleLevel - ratioInc * inc),
+          scrollY
+        );
 
         $container.on("scroll", () => {
           scrollX =
             $container.scrollLeft() - domUtils.getScrollWidth($container) / 2;
+
+          scrollY =
+            $container.scrollTop() - domUtils.getScrollHeight($container) / 2;
         });
       };
 
