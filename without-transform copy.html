@@ -52,35 +52,35 @@
       const $scaleDown = $("#scaleDown");
       const $container = $(".container");
       const $page = $(".page");
+      let scaleLevel = 1;
       let width = 600;
       let height = 400;
-      let scaleLevel = 1;
+
+      const geomUtils = (function () {
+        const scale = (length, scaleLevel) => length * scaleLevel;
+
+        return {
+          scale,
+        };
+      })();
+
+      const domUtils = (function () {
+        const scale = ($el, baseWidth, baseHeight, scaleLevel) => {
+          $page.css({
+            width: geomUtils.scale(baseWidth, scaleLevel),
+            height: geomUtils.scale(baseHeight, scaleLevel),
+          });
+        };
+
+        return {
+          scale,
+        };
+      })();
 
       $scaleUp.click(() => {
-        scaleLevel += 0.5;
+        scaleLevel += 0.1;
 
-        const centerScroll =
-          Math.max(0, $page.width() - $container.width());
-        const offset = $container.scrollLeft()         ;
-
-        $page.css({
-          width: width * scaleLevel,
-          height: height * scaleLevel,
-        });
-
-        const newCenterScroll =
-          Math.max(0, $page.width() - $container.width());
-
-                  
-          if (!centerScroll) {
-            console.log(1);
-            $container.scrollLeft(newCenterScroll * 0.5);
-          } else {
-            console.log(2);
-          const r = newCenterScroll / centerScroll;
-          $container.scrollLeft(newCenterScroll * 0.5- (0.5 * newCenterScroll - offset * r));
-        }
-
+        domUtils.scale($page, width, height, scaleLevel);
       });
     </script>
   </body>
