@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <style>
+      .container {
+        width: 200px;
+        height: 200px;
+        overflow: auto;
+      }
+
+      .content {
+        width: 500px;
+        height: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="content">Content</div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+    <script>
+      "use strict";
+
+      const $container = $(".container");
+
+      let center = null;
+
+      const onScroll = () => {
+        center = {
+          x: $container.width() / 2 + $container.scrollLeft(),
+          y: $container.height() / 2 + $container.scrollTop(),
+        };
+
+        console.log(center);
+      };
+
+      onScroll();
+      $container.on("scroll", onScroll);
+    </script>
+  </body>
+</html>
